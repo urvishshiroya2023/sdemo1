@@ -1,44 +1,27 @@
-import React, { useState } from "react";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [input, setInput] = useState({
-    email: "",
-    password: "",
+
+  // Define the validation schema using Yup
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().required("Email is required").email("Invalid email"),
+    password: Yup.string().required("Password is required"),
   });
 
-  const [errors, setErrors] = useState({
+  const initialValues = {
     email: "",
     password: "",
-  });
+  };
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+  const onSubmit = (values) => {
     const loggedUser = JSON.parse(localStorage.getItem("user"));
 
     // Validate email and password
-    const newErrors = {};
-
-    if (input.email.trim() === "") {
-      newErrors.email = "Email is required.";
-    } else if (input.email !== loggedUser.email) {
-      newErrors.email = "Invalid email.";
-    } else {
-      newErrors.email = "";
-    }
-
-    if (input.password.trim() === "") {
-      newErrors.password = "Password is required.";
-    } else if (input.password !== loggedUser.password) {
-      newErrors.password = "Invalid password.";
-    } else {
-      newErrors.password = "";
-    }
-
-    setErrors(newErrors);
-
-    if (Object.values(newErrors).every((error) => error === "")) {
+    if (values.email === loggedUser.email && values.password === loggedUser.password) {
       localStorage.setItem("loggedin", true);
       navigate("/info");
     }
@@ -47,48 +30,46 @@ const Login = () => {
   return (
     <div className="container my-5">
       <h1>Login</h1>
-      <form onSubmit={handleLogin}>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email address
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            value={input.email}
-            name="email"
-            onChange={(e) =>
-              setInput({ ...input, [e.target.name]: e.target.value })
-            }
-          />
-          <p className="text-danger">{errors.email}</p>
-        </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            value={input.password}
-            name="password"
-            onChange={(e) =>
-              setInput({ ...input, [e.target.name]: e.target.value })
-            }
-          />
-          <p className="text-danger">{errors.password}</p>
-        </div>
-        <div>
-          <p>
-            Don't have an account? <Link to={"/register"}>Register Here</Link>
-          </p>
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Submit
-        </button>
-      </form>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={onSubmit}
+      >
+        <Form>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">
+              Email address
+            </label>
+            <Field
+              type="email"
+              className="form-control"
+              id="email"
+              name="email"
+            />
+            <ErrorMessage name="email" component="p" className="text-danger" />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">
+              Password
+            </label>
+            <Field
+              type="password"
+              className="form-control"
+              id="password"
+              name="password"
+            />
+            <ErrorMessage name="password" component="p" className="text-danger" />
+          </div>
+          <div>
+            <p>
+              Don't have an account? <Link to={"/register"}>Register Here</Link>
+            </p>
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
+        </Form>
+      </Formik>
     </div>
   );
 };

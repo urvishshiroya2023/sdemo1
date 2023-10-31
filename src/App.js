@@ -3,6 +3,7 @@ import "./App.css";
 import Body from "./Components/Body";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
+import SubtaskForm from "./Components/SubTaskForm";
 import TaskForm from "./Components/TaskForm";
 import Home from "./Pages/Home";
 import Info from "./Pages/Info";
@@ -35,6 +36,10 @@ const appRouter = createBrowserRouter([
       {
         path: "/edit-task/:id",
         element: <TaskForm />,
+      },
+      {
+        path: "/subtaskform/:taskId",
+        element: <SubtaskForm />,
       },
     ],
   },

@@ -1,83 +1,56 @@
+import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import uuid from "react-uuid";
+import * as Yup from "yup";
 import { addTask, editTask, getTaskById } from "../Contants/Contants";
-import { useForm } from "../Hooks/useForm";
 
 const TaskForm = () => {
   const { id } = useParams();
   const [showAlert, setshowAlert] = useState(false);
-  const { inputValues, handleInputChange, resetForm, setForm } = useForm({
-    title: "",
-    desc: "",
-    priority: "",
-    duedate: "",
+
+  // Define the validation schema using Yup
+  const validationSchema = Yup.object().shape({
+    title: Yup.string()
+      .required("Title is required.")
+      .max(15, "Title must be 15 characters or less."),
+    desc: Yup.string()
+      .required("Description is required.")
+      .max(20, "Description must be 20 words or less."),
+    priority: Yup.string().required("Priority is required."),
+    duedate: Yup.date()
+      .min(new Date(), "Due Date must be today or a future date.")
+      .required("Due Date is required."),
   });
 
-  const [errors, setErrors] = useState({
-    title: "",
-    desc: "",
-    priority: "",
-    duedate: "",
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      desc: "",
+      priority: "",
+      duedate: "",
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      if (id) {
+        editTask(id, values);
+      } else {
+        addTask({ id: uuid(), ...values });
+      }
+      formik.resetForm();
+      setshowAlert(true);
+      setTimeout(() => {
+        setshowAlert(false);
+      }, 2000);
+    },
   });
 
   useEffect(() => {
     if (id) {
       const task = getTaskById(id);
-      setForm(task);
+      formik.setValues(task);
     }
   }, [id]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const newErrors = {};
-
-    // Validate Title
-    if (inputValues.title.trim() === "") {
-      newErrors.title = "Title is required.";
-    } else if (inputValues.title.length > 15) {
-      newErrors.title = "Title must be 15 characters or less.";
-    } else {
-      newErrors.title = "";
-    }
-
-    // Validate Description
-    if (inputValues.desc.trim() === "") {
-      newErrors.desc = "Description is required.";
-    } else if (inputValues.desc.split(/\s+/).length > 20) {
-      newErrors.desc = "Description must be 20 words or less.";
-    } else {
-      newErrors.desc = "";
-    }
-
-    // Validate Priority
-    if (inputValues.priority === "") {
-      newErrors.priority = "Priority is required.";
-    } else {
-      newErrors.priority = "";
-    }
-
-    // Validate Due Date
-    const today = new Date();
-    const dueDate = new Date(inputValues.duedate);
-    if (dueDate < today) {
-      newErrors.duedate = "Due Date must be today or a future date.";
-    } else {
-      newErrors.duedate = "";
-    }
-
-    setErrors(newErrors);
-
-    if (Object.values(newErrors).every((error) => error === "")) {
-      id ? editTask(id, inputValues) : addTask({ id: uuid(), ...inputValues });
-      resetForm();
-      setshowAlert(true);
-      setTimeout(() => {
-        setshowAlert(false);
-      }, 2000);
-    }
-  };
 
   return (
     <div className="container my-5">
@@ -86,71 +59,83 @@ const TaskForm = () => {
           <h2>{id ? "Edit" : "Add New"} Task</h2>
         </div>
         <div>
-          <Link to={"/info"}>
+          <Link to="/info">
             <button className="btn btn-dark">Back</button>
           </Link>
         </div>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={formik.handleSubmit}>
         <div className="mt-2">
-          <div class="col">
+          <div className="col">
             <label htmlFor="title">Title:</label>
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               id="title"
               name="title"
-              value={inputValues.title}
-              onChange={handleInputChange}
+              value={formik.values.title}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               placeholder="Enter Title Name"
               aria-label="title"
             />
-            <p className="text-danger">{errors.title}</p>
+            {formik.touched.title && formik.errors.title && (
+              <p className="text-danger">{formik.errors.title}</p>
+            )}
           </div>
         </div>
         <div className="mt-2">
-          <label for="desc" class="form-label">
+          <label htmlFor="desc" className="form-label">
             Task Description:
           </label>
           <textarea
-            class="form-control"
+            className="form-control"
             id="desc"
             name="desc"
             rows="4"
             cols="50"
-            value={inputValues.desc}
-            onChange={handleInputChange}
+            value={formik.values.desc}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           ></textarea>
-          <p className="text-danger">{errors.desc}</p>
+          {formik.touched.desc && formik.errors.desc && (
+            <p className="text-danger">{formik.errors.desc}</p>
+          )}
         </div>
         <div className="mt-2">
-          <label for="priority">Priority of Task:</label>
+          <label htmlFor="priority">Priority of Task:</label>
           <select
-            class="form-select"
+            className="form-select"
             name="priority"
             id="priority"
-            value={inputValues.priority}
-            onChange={handleInputChange}
+            value={formik.values.priority}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             aria-label="Default select example"
           >
-            <option selected>Select Priority</option>
+            <option value="" disabled>Select Priority</option>
             <option value="high">High</option>
             <option value="medium">Medium</option>
             <option value="low">Low</option>
           </select>
-          <p className="text-danger">{errors.priority}</p>
+          {formik.touched.priority && formik.errors.priority && (
+            <p className="text-danger">{formik.errors.priority}</p>
+          )}
         </div>
         <div className="mt-2">
-          <label for="duedate">Due Date:</label>
+          <label htmlFor="duedate">Due Date:</label>
           <input
             className="ms-2"
             type="date"
             id="duedate"
             name="duedate"
-            value={inputValues.duedate}
-            onChange={handleInputChange}
+            value={formik.values.duedate}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           ></input>
-          <p className="text-danger">{errors.duedate}</p>
+          {formik.touched.duedate && formik.errors.duedate && (
+            <p className="text-danger">{formik.errors.duedate}</p>
+          )}
         </div>
         <div>
           <button className="btn btn-success mt-2" type="submit">

@@ -62,11 +62,13 @@ const TaskList = () => {
         <table className="table">
           <thead>
             <tr>
+              <th scope="col">Button</th>
               <th scope="col">Title</th>
               <th scope="col">Description</th>
               <th scope="col">Priority</th>
               <th scope="col">Due Date</th>
               <th scope="col">Actions</th>
+              <th scope="col">SubTask</th>
             </tr>
           </thead>
 
