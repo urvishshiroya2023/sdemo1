@@ -113,7 +113,9 @@ const TaskForm = () => {
             onBlur={formik.handleBlur}
             aria-label="Default select example"
           >
-            <option value="" disabled>Select Priority</option>
+            <option value="" disabled>
+              Select Priority
+            </option>
             <option value="high">High</option>
             <option value="medium">Medium</option>
             <option value="low">Low</option>
@@ -132,6 +134,7 @@ const TaskForm = () => {
             value={formik.values.duedate}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            min={new Date().toISOString().split("T")[0]}
           ></input>
           {formik.touched.duedate && formik.errors.duedate && (
             <p className="text-danger">{formik.errors.duedate}</p>

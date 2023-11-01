@@ -35,14 +35,14 @@ const TaskList = () => {
       });
     } else {
       // Reset to the original order
-      setTasks([...originalTasks]);
+      // setTasks([...originalTasks]);
     }
   };
 
   return (
     <div>
       <div className="d-flex my-2">
-        <div>
+        {/* <div>
           <select
             className="form-select"
             name="priority"
@@ -55,7 +55,25 @@ const TaskList = () => {
             <option value="priorityHighToLow">Priority: High to Low</option>
             <option value="sortByDate">Date: Sorted By Date</option>
           </select>
-        </div>
+        </div> */}
+        {tasks.length > 0 ? (
+          <div>
+            <select
+              className="form-select"
+              name="priority"
+              id="priority"
+              aria-label="Default select example"
+              onChange={handleSortChange}
+              value={sortBy}
+            >
+              <option value="none">Sorted By</option>
+              <option value="priorityHighToLow">Priority: High to Low</option>
+              <option value="sortByDate">Date: Sorted By Date</option>
+            </select>
+          </div>
+        ) : (
+          " "
+        )}
       </div>
 
       {tasks.length > 0 ? (

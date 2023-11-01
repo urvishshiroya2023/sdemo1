@@ -2,7 +2,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import * as Yup from "yup";
 
 const Login = () => {
@@ -18,18 +18,44 @@ const Login = () => {
     password: "",
   };
 
+  // const onSubmit = (values) => {
+  //   const loggedUser = JSON.parse(localStorage.getItem("user"));
+
+  //   if (values.email === loggedUser.email && values.password === loggedUser.password) {
+
+  //     localStorage.setItem("loggedin", true);
+  //     toast.success("Login successful", {
+  //       position: "top-right",
+  //     });
+  //     navigate("/info");
+  //   } else {
+  //     toast.error("Incorrect email or password", {
+  //       position: "top-right",
+  //     });
+  //   }
+  // };
+
   const onSubmit = (values) => {
     const loggedUser = JSON.parse(localStorage.getItem("user"));
 
-    if (values.email === loggedUser.email && values.password === loggedUser.password) {
-
+    if (!loggedUser) {
+      // Non-registered user
+      toast.error("Please register.", {
+        position: "top-right",
+      });
+    } else if (
+      values.email === loggedUser.email &&
+      values.password === loggedUser.password
+    ) {
+      // Successful login
       localStorage.setItem("loggedin", true);
       toast.success("Login successful", {
         position: "top-right",
       });
       navigate("/info");
     } else {
-      toast.error("Incorrect email or password", {
+      // Invalid password
+      toast.error("Invalid password", {
         position: "top-right",
       });
     }
@@ -66,7 +92,11 @@ const Login = () => {
               id="password"
               name="password"
             />
-            <ErrorMessage name="password" component="p" className="text-danger" />
+            <ErrorMessage
+              name="password"
+              component="p"
+              className="text-danger"
+            />
           </div>
           <div>
             <p>
