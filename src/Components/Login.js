@@ -8,7 +8,6 @@ import * as Yup from "yup";
 const Login = () => {
   const navigate = useNavigate();
 
-  // Define the validation schema using Yup
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").email("Invalid email"),
     password: Yup.string().required("Password is required"),
@@ -19,35 +18,22 @@ const Login = () => {
     password: "",
   };
 
-  // const onSubmit = (values) => {
-  //   const loggedUser = JSON.parse(localStorage.getItem("user"));
-
-  //   // Validate email and password
-  //   if (values.email === loggedUser.email && values.password === loggedUser.password) {
-  //     localStorage.setItem("loggedin", true);
-  //     navigate("/info");
-  //   }
-  // };
-
   const onSubmit = (values) => {
     const loggedUser = JSON.parse(localStorage.getItem("user"));
 
-    // Check if email and password match the stored user
     if (values.email === loggedUser.email && values.password === loggedUser.password) {
-      // Successful login
+
       localStorage.setItem("loggedin", true);
       toast.success("Login successful", {
         position: "top-right",
       });
       navigate("/info");
     } else {
-      // Incorrect credentials
       toast.error("Incorrect email or password", {
         position: "top-right",
       });
     }
   };
-
 
   return (
     <div className="container my-5">
