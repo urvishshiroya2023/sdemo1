@@ -1,6 +1,8 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import * as Yup from "yup";
 
 const Login = () => {
@@ -17,15 +19,35 @@ const Login = () => {
     password: "",
   };
 
+  // const onSubmit = (values) => {
+  //   const loggedUser = JSON.parse(localStorage.getItem("user"));
+
+  //   // Validate email and password
+  //   if (values.email === loggedUser.email && values.password === loggedUser.password) {
+  //     localStorage.setItem("loggedin", true);
+  //     navigate("/info");
+  //   }
+  // };
+
   const onSubmit = (values) => {
     const loggedUser = JSON.parse(localStorage.getItem("user"));
 
-    // Validate email and password
+    // Check if email and password match the stored user
     if (values.email === loggedUser.email && values.password === loggedUser.password) {
+      // Successful login
       localStorage.setItem("loggedin", true);
+      toast.success("Login successful", {
+        position: "top-right",
+      });
       navigate("/info");
+    } else {
+      // Incorrect credentials
+      toast.error("Incorrect email or password", {
+        position: "top-right",
+      });
     }
   };
+
 
   return (
     <div className="container my-5">

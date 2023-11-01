@@ -285,7 +285,6 @@ const TaskData = ({ item, setTasks }) => {
   const [isSubtaskListOpen, setIsSubtaskListOpen] = useState(false);
 
   useEffect(() => {
-    // Retrieve subtasks from local storage when the component first mounts
     const subtaskData = JSON.parse(localStorage.getItem(item.id)) || [];
     setSubtasks(subtaskData);
   }, [item.id]);
@@ -316,7 +315,7 @@ const TaskData = ({ item, setTasks }) => {
     <tbody>
       <tr>
         <th>
-          <button onClick={toggleSubtaskList}>+</button>
+          <button onClick={toggleSubtaskList}>{isSubtaskListOpen ? "-" : "+"}</button>
         </th>
         <th scope="row">{item.title}</th>
         <td>{item.desc}</td>
@@ -338,6 +337,9 @@ const TaskData = ({ item, setTasks }) => {
 };
 
 export default TaskData;
+
+
+
 
 
 
