@@ -18,22 +18,7 @@ const Login = () => {
     password: "",
   };
 
-  // const onSubmit = (values) => {
-  //   const loggedUser = JSON.parse(localStorage.getItem("user"));
 
-  //   if (values.email === loggedUser.email && values.password === loggedUser.password) {
-
-  //     localStorage.setItem("loggedin", true);
-  //     toast.success("Login successful", {
-  //       position: "top-right",
-  //     });
-  //     navigate("/info");
-  //   } else {
-  //     toast.error("Incorrect email or password", {
-  //       position: "top-right",
-  //     });
-  //   }
-  // };
 
   const onSubmit = (values) => {
     const loggedUser = JSON.parse(localStorage.getItem("user"));

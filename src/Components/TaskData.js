@@ -38,7 +38,7 @@ const TaskData = ({ item, setTasks }) => {
     <tbody>
       <tr>
         <th>
-          <button onClick={toggleSubtaskList}>{isSubtaskListOpen ? "-" : "+"}</button>
+          <button className="btn btn-secondary" onClick={toggleSubtaskList}>{isSubtaskListOpen ? "-" : "+"}</button>
         </th>
         <th scope="row">{item.title}</th>
         <td>{item.desc}</td>
