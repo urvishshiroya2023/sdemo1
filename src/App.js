@@ -1,9 +1,10 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, RouterProvider, Routes, createBrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import Body from "./Components/Body";
 import Login from "./Components/Login";
+import ProtectedRoutes from "./Components/ProtectedRoutes";
 import Register from "./Components/Register";
 import SubtaskForm from "./Components/SubTaskForm";
 import TaskForm from "./Components/TaskForm";
@@ -16,7 +17,7 @@ const appRouter = createBrowserRouter([
     element: <Body />,
     children: [
       {
-        path: "/",
+        path: "/home",
         element: <Home />,
       },
       {
@@ -51,6 +52,14 @@ function App() {
   return (
     <div className="App">
       <ToastContainer />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<ProtectedRoutes />}>
+            <Route path="/" element={<Info />} />
+          </Route>
+        </Routes>
+
+      </BrowserRouter>
       <RouterProvider router={appRouter} />
     </div>
   );

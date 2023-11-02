@@ -22,7 +22,7 @@ const SubtaskList = ({ taskId, subtasks, onSubtaskAdded, onDeleteSubtask }) => {
         onDeleteSubtask(updatedSubtasks);
     };
 
-    console.log(subtasks);
+    // console.log(subtasks);
 
     return (
         <div>

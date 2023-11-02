@@ -30,7 +30,6 @@ const Register = () => {
   };
 
   const onSubmit = (values) => {
-    // You can perform your registration logic here
     localStorage.setItem("user", JSON.stringify(values));
     navigate("/login");
   };
