@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const SubtaskList = ({ taskId, subtasks, onSubtaskAdded, onDeleteSubtask }) => {
+const SubtaskList = ({ taskId, subtasks, onSubtaskAdded, onDeleteSubtask, gridView }) => {
     const [editingSubtask, setEditingSubtask] = useState(null);
 
     const handleEdit = (subtask) => {
@@ -26,8 +26,11 @@ const SubtaskList = ({ taskId, subtasks, onSubtaskAdded, onDeleteSubtask }) => {
 
     return (
         <div>
+            {subtasks.length > 0 ? (<h5>Sub Tasks:</h5>) : (" ")}
             <ol className="mt-2">
                 {subtasks.map((subtask) => (
+
+
                     <li className="mt-2" key={subtask.id}>
                         <div>
                             <strong>Title: {subtask.title}</strong>
@@ -50,6 +53,8 @@ const SubtaskList = ({ taskId, subtasks, onSubtaskAdded, onDeleteSubtask }) => {
                             <button className="btn btn-danger ms-2" onClick={() => handleDelete(subtask)}>Delete</button>
                         </div>
                     </li>
+
+
                 ))}
             </ol>
         </div>

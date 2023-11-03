@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import TaskData from "../Components/TaskData";
 import { getListTasks } from "../Contants/Contants";
+import tabicon from "../images/layout.png";
+import listicon from "../images/list.png";
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [originalTasks, setOriginalTasks] = useState([]);
   const [sortBy, setSortBy] = useState("none");
+  const [gridView, setGridView] = useState(true);
 
   useEffect(() => {
     const initialTasks = getListTasks();
@@ -39,9 +42,17 @@ const TaskList = () => {
     }
   };
 
+  const gridActive = () => {
+    setGridView(false);
+  }
+
+  const tableView = () => {
+    setGridView(true);
+  };
+
   return (
     <div>
-      <div className="d-flex my-2">
+      <div className=" my-3">
         {/* <div>
           <select
             className="form-select"
@@ -57,19 +68,25 @@ const TaskList = () => {
           </select>
         </div> */}
         {tasks.length > 0 ? (
-          <div>
-            <select
-              className="form-select"
-              name="priority"
-              id="priority"
-              aria-label="Default select example"
-              onChange={handleSortChange}
-              value={sortBy}
-            >
-              <option value="none">Sorted By</option>
-              <option value="priorityHighToLow">Priority: High to Low</option>
-              <option value="sortByDate">Date: Sorted By Date</option>
-            </select>
+          <div className="d-flex justify-content-between">
+            <div>
+              <select
+                className="form-select"
+                name="priority"
+                id="priority"
+                aria-label="Default select example"
+                onChange={handleSortChange}
+                value={sortBy}
+              >
+                <option value="none">Sorted By</option>
+                <option value="priorityHighToLow">Priority: High to Low</option>
+                <option value="sortByDate">Date: Sorted By Date</option>
+              </select>
+            </div>
+            <div className="d-flex">
+              <button className={`btn ${gridView ? 'btn-success' : 'btn-primary'}`} onClick={tableView}><img src={tabicon} alt="tabicon" /></button>
+              <button className={`btn ms-2 ${gridView ? 'btn-primary' : 'btn-success'}`} onClick={gridActive} ><img src={listicon} alt="tabicon" /></button>
+            </div>
           </div>
         ) : (
           " "
@@ -77,23 +94,43 @@ const TaskList = () => {
       </div>
 
       {tasks.length > 0 ? (
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">Button</th>
-              <th scope="col">Title</th>
-              <th scope="col">Description</th>
-              <th scope="col">Priority</th>
-              <th scope="col">Due Date</th>
-              <th scope="col">Actions</th>
-              <th scope="col">SubTask</th>
-            </tr>
-          </thead>
+        <>
+          {gridView ? (<table className="table">
+            <thead>
+              <tr>
+                <th scope="col">Button</th>
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th scope="col">Priority</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Actions</th>
+                <th scope="col">SubTask</th>
+              </tr>
+            </thead>
 
-          {tasks.map((item) => (
-            <TaskData item={item} key={item.id} setTasks={setTasks} />
-          ))}
-        </table>
+            {tasks.map((item) => (
+              <TaskData item={item} key={item.id} setTasks={setTasks} gridView={gridView} setGridView={setGridView} />
+            ))}
+          </table>) : (
+            <div className="">
+              <div style={{ backgroundColor: "rgba(255, 0, 0, 0.2)" }} className="row mt-2 p-2 rounded shadow">
+                <div className="col">Button</div>
+                <div className="col">Title</div>
+                <div className="col">Description</div>
+                <div className="col">Priority</div>
+                <div className="col">Due Date</div>
+                <div className="col">Actions</div>
+                <div className="col">SubTask</div>
+              </div>
+              {tasks.map((item) => (
+                <TaskData item={item} key={item.id} setTasks={setTasks} gridView={gridView} setGridView={setGridView} />
+              ))}
+            </div>
+          )}
+
+        </>
+
+
       ) : (
         <h3>No Task Found</h3>
       )}

@@ -58,7 +58,6 @@ function App() {
             <Route path="/" element={<Info />} />
           </Route>
         </Routes>
-
       </BrowserRouter>
       <RouterProvider router={appRouter} />
     </div>
